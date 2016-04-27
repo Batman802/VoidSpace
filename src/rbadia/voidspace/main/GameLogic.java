@@ -75,6 +75,7 @@ public class GameLogic {
 		
 		// init game variables
 		bullets = new ArrayList<Bullet>();
+		soundMan.playGameMusic();
 
 		status.setShipsLeft(3);
 		status.setGameOver(false);
@@ -89,8 +90,10 @@ public class GameLogic {
 		status.setNewReaperShip(true);
 		status.setScore(0);
 		status.setLevel(1);
+
+		
 				
-		// init the ship and the asteroid
+		// init the ship and the asteroids
         newShip(gameScreen);
         newAsteroid(gameScreen);
         newAsteroid1(gameScreen);

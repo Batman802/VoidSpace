@@ -49,6 +49,7 @@ public class GameScreen extends JPanel {
 	private int initialReaperLoc = 0;
 
 	private int reaperHP = 3;
+	private int asteroid1HP = 2;
 
 
 	private Rectangle asteroidExplosion;
@@ -216,7 +217,7 @@ public class GameScreen extends JPanel {
 
 
 
-		// draw asteroid
+		// draw second asteroid
 		if(status.getLevel() > 1){
 			if(!status.isNewAsteroid1()){
 				// draw the asteroid until it reaches the bottom of the screen
@@ -237,6 +238,7 @@ public class GameScreen extends JPanel {
 				else{
 					asteroid1.setLocation(rand1.nextInt(getWidth() - asteroid1.width), 0);
 					this.initialLoc1 = asteroid1.x;
+					asteroid1HP = 2;
 				}
 			}
 			else{
@@ -247,6 +249,7 @@ public class GameScreen extends JPanel {
 					status.setNewAsteroid1(false);
 					asteroid1.setLocation(rand1.nextInt(getWidth() - asteroid1.width), 0);
 					this.initialLoc1 = asteroid1.x;
+					asteroid1HP = 2;
 				}
 				else{
 					// draw explosion
@@ -322,31 +325,34 @@ public class GameScreen extends JPanel {
 				bullets.remove(i);
 				break;
 			}else if(asteroid1.intersects(bullet)){
-				// increase asteroids destroyed and score count
-				status.setAsteroids1Destroyed(status.getAsteroids1Destroyed() + 1);
-				status.setScore(status.getScore() + 100);
-
-				//increase level if 10 asteroids or enemies are destroyed
-				if ((status.getTotalAsteroidsDestroyed() + status.getEnemiesDestroyed() + status.getReapersDestroyed())%5 == 0){
-					status.setLevel(status.getLevel() + 1);
-				}
-
-				// "remove" asteroid
-				asteroid1Explosion = new Rectangle(
-						asteroid1.x,
-						asteroid1.y,
-						asteroid1.width,
-						asteroid1.height);
-				asteroid1.setLocation(-asteroid1.width, -asteroid1.height);
-				status.setNewAsteroid1(true);
-				lastAsteroid1Time = System.currentTimeMillis();
-
-				// play asteroid explosion sound
-				soundMan.playAsteroid1ExplosionSound();
-
+				asteroid1HP--;
 				// remove bullet
 				bullets.remove(i);
-				break;
+
+				if (asteroid1HP==0){
+					// increase asteroids destroyed and score count
+					status.setAsteroids1Destroyed(status.getAsteroids1Destroyed() + 1);
+					status.setScore(status.getScore() + 100);
+
+					//increase level if 10 asteroids or enemies are destroyed
+					if ((status.getTotalAsteroidsDestroyed() + status.getEnemiesDestroyed() + status.getReapersDestroyed())%5 == 0){
+						status.setLevel(status.getLevel() + 1);
+					}
+
+					// "remove" asteroid
+					asteroid1Explosion = new Rectangle(
+							asteroid1.x,
+							asteroid1.y,
+							asteroid1.width,
+							asteroid1.height);
+					asteroid1.setLocation(-asteroid1.width, -asteroid1.height);
+					status.setNewAsteroid1(true);
+					lastAsteroid1Time = System.currentTimeMillis();
+
+					// play asteroid explosion sound
+					soundMan.playAsteroid1ExplosionSound();				
+					break;
+				}
 			}
 		} 
 
@@ -354,68 +360,77 @@ public class GameScreen extends JPanel {
 		if (status.getLevel()>2){
 			for(int i=0; i<bullets.size(); i++){
 				Bullet bullet = bullets.get(i);
-				if(enemyShip.intersects(bullet)){
-					// increase enemies destroyed and score count
-					status.setEnemiesDestroyed(status.getEnemiesDestroyed() + 1);
-					status.setScore(status.getScore() + 500);
+				try {
+					if(enemyShip.intersects(bullet)){
+						// increase enemies destroyed and score count
+						status.setEnemiesDestroyed(status.getEnemiesDestroyed() + 1);
+						status.setScore(status.getScore() + 500);
 
-					//increase level if 5 asteroids are destroyed
-					if ((status.getEnemiesDestroyed() + status.getTotalAsteroidsDestroyed() + status.getReapersDestroyed())%5 == 0){
-						status.setLevel(status.getLevel() + 1);
+						//increase level if 5 asteroids are destroyed
+						if ((status.getEnemiesDestroyed() + status.getTotalAsteroidsDestroyed() + status.getReapersDestroyed())%5 == 0){
+							status.setLevel(status.getLevel() + 1);
+						}
+
+						// "remove" fighter
+						shipExplosion = new Rectangle(
+								enemyShip.x,
+								enemyShip.y,
+								enemyShip.width,
+								enemyShip.height);
+						enemyShip.setLocation(-enemyShip.width, -enemyShip.height);
+						status.setNewEnemyShip(true);
+						lastEnemyTime = System.currentTimeMillis();
+
+						// play asteroid explosion sound
+						soundMan.playShipExplosionSound();
+
+						// remove bullet
+						bullets.remove(i);
+						break;
 					}
-
-					// "remove" fighter
-					shipExplosion = new Rectangle(
-							enemyShip.x,
-							enemyShip.y,
-							enemyShip.width,
-							enemyShip.height);
-					enemyShip.setLocation(-enemyShip.width, -enemyShip.height);
-					status.setNewEnemyShip(true);
-					lastEnemyTime = System.currentTimeMillis();
-
-					// play asteroid explosion sound
-					soundMan.playShipExplosionSound();
-
-					// remove bullet
-					bullets.remove(i);
+				} catch (Exception e){
 					break;
 				}
-			} 
+			}
 		}
 
 		// check bullet-Reaper collisions
 		if (status.getLevel()>3){
 			for(int i=0; i<bullets.size(); i++){
 				Bullet bullet = bullets.get(i);
-				if(reaperShip.intersects(bullet)){
-					reaperHP--;
-					// remove bullet
-					bullets.remove(i);
-					if(reaperHP == 0){
-						// increase enemies destroyed and score count
-						status.setReapersDestroyed(status.getReapersDestroyed() + 1);
-						status.setScore(status.getScore() + 1000);
+				try{
+					if(reaperShip.intersects(bullet)){
+						reaperHP--;
+						// remove bullet
+						bullets.remove(i);
 
-						//increase level if 5 asteroids/Reapers/Fighters are destroyed
-						if ((status.getEnemiesDestroyed() + status.getTotalAsteroidsDestroyed() + status.getReapersDestroyed())%5 == 0){
-							status.setLevel(status.getLevel() + 1);
+						if(reaperHP == 0){
+							// increase enemies destroyed and score count
+							status.setReapersDestroyed(status.getReapersDestroyed() + 1);
+							status.setScore(status.getScore() + 1000);
+
+							//increase level if 5 asteroids/Reapers/Fighters are destroyed
+							if ((status.getEnemiesDestroyed() + status.getTotalAsteroidsDestroyed() + status.getReapersDestroyed())%5 == 0){
+								status.setLevel(status.getLevel() + 1);
+							}
+
+							// "remove" Reaper
+							reaperExplosion = new Rectangle(
+									reaperShip.x,
+									reaperShip.y,
+									reaperShip.width,
+									reaperShip.height);
+							reaperShip.setLocation(-reaperShip.width, -reaperShip.height);
+							status.setNewReaperShip(true);
+							lastReaperTime = System.currentTimeMillis();
+
+							// play ship explosion sound
+							soundMan.playShipExplosionSound();
+							break;
 						}
-
-						// "remove" Reaper
-						reaperExplosion = new Rectangle(
-								reaperShip.x,
-								reaperShip.y,
-								reaperShip.width,
-								reaperShip.height);
-						reaperShip.setLocation(-reaperShip.width, -reaperShip.height);
-						status.setNewReaperShip(true);
-						lastReaperTime = System.currentTimeMillis();
-
-						// play ship explosion sound
-						soundMan.playShipExplosionSound();
-						break;
 					}
+				} catch (Exception e) {
+					break;
 				}
 			} 
 		}
@@ -491,7 +506,7 @@ public class GameScreen extends JPanel {
 				// draw the enemy ship until it reaches the bottom of the screen
 				if(enemyShip.getY() + enemyShip.getSpeed() < this.getHeight()){
 					enemyShip.translate(0, enemyShip.getSpeed());
-					if(enemyShip.x==ship.x){
+					if(enemyShip.intersectsLine(0, 100, this.getWidth(), 100)){
 						gameLogic.fireEnemyBullet();
 					}
 					graphicsMan.drawEnemyShip(enemyShip, g2d, this);
@@ -499,14 +514,14 @@ public class GameScreen extends JPanel {
 						if (this.initialEnemyLoc<this.getWidth()/2){
 							enemyShip.translate(1, 0);
 							graphicsMan.drawEnemyShip(enemyShip, g2d, this);
-							if(enemyShip.x==ship.x){
+							if(enemyShip.getHeight()==(this.getHeight()-300)){
 								gameLogic.fireEnemyBullet();
 							}
 						}
 						else {
 							enemyShip.translate(-1, 0);
 							graphicsMan.drawEnemyShip(enemyShip, g2d, this);
-							if(enemyShip.x==ship.x){
+							if(enemyShip.getHeight()==(this.getHeight()-300)){
 								gameLogic.fireEnemyBullet();
 							}
 						}
@@ -540,21 +555,21 @@ public class GameScreen extends JPanel {
 				// draw the enemy ship until it reaches the bottom of the screen
 				if(reaperShip.getY() + reaperShip.getSpeed() < this.getHeight()){
 					reaperShip.translate(0, reaperShip.getSpeed());
-					if(reaperShip.x==ship.x){
-						gameLogic.fireEnemyBullet();
+					if(reaperShip.intersectsLine(0, 100, this.getWidth(), 100)){
+						gameLogic.fireReaperBullet();
 					}
 					graphicsMan.drawReaperShip(reaperShip, g2d, this);
 					if (status.getLevel()>4){
 						if (this.initialReaperLoc<this.getWidth()/2){
 							reaperShip.translate(1, 0);
 							graphicsMan.drawReaperShip(reaperShip, g2d, this);
-							if(reaperShip.x==ship.x){
+							if(reaperShip.intersectsLine(0, 100, this.getWidth(), 100)){
 								gameLogic.fireReaperBullet();
 							}
 						}else {
 							reaperShip.translate(-1, 0);
 							graphicsMan.drawReaperShip(reaperShip, g2d, this);
-							if(reaperShip.x==ship.x){
+							if(reaperShip.intersectsLine(0, 100, this.getWidth(), 100)){
 								gameLogic.fireReaperBullet();
 							}
 						}
@@ -620,6 +635,7 @@ public class GameScreen extends JPanel {
 			// play asteroid explosion sound
 			soundMan.playAsteroidExplosionSound();
 		}else if(asteroid1.intersects(ship)){
+			asteroid1HP--;
 			// decrease number of ships left
 			status.setShipsLeft(status.getShipsLeft() - 1);
 			status.setAsteroids1Destroyed(status.getAsteroids1Destroyed() + 1);
@@ -630,15 +646,20 @@ public class GameScreen extends JPanel {
 				status.setLevel(status.getLevel() + 1);
 			}
 
-			// "remove" asteroid
-			asteroid1Explosion = new Rectangle(
-					asteroid1.x,
-					asteroid1.y,
-					asteroid1.width,
-					asteroid1.height);
-			asteroid1.setLocation(-asteroid1.width, -asteroid1.height);
-			status.setNewAsteroid1(true);
-			lastAsteroid1Time = System.currentTimeMillis();
+			if (asteroid1HP==0){
+				// "remove" asteroid
+				asteroid1Explosion = new Rectangle(
+						asteroid1.x,
+						asteroid1.y,
+						asteroid1.width,
+						asteroid1.height);
+				asteroid1.setLocation(-asteroid1.width, -asteroid1.height);
+				status.setNewAsteroid1(true);
+				lastAsteroid1Time = System.currentTimeMillis();
+
+				// play asteroid explosion sound
+				soundMan.playAsteroidExplosionSound();
+			}
 
 			// "remove" ship
 			shipExplosion = new Rectangle(
@@ -652,75 +673,33 @@ public class GameScreen extends JPanel {
 
 			// play ship explosion sound
 			soundMan.playShipExplosionSound();
-			// play asteroid explosion sound
-			soundMan.playAsteroidExplosionSound();
+
 		}
 
 		// check ship-enemy collisions
 		if (status.getLevel()>2){
-			if(enemyShip.intersects(ship)){
-				// decrease number of ships left
-				status.setShipsLeft(status.getShipsLeft() - 1);
-
-				status.setEnemiesDestroyed(status.getEnemiesDestroyed() + 1);
-				status.setScore(status.getScore() + 50);
-
-				//increase level if 5 asteroids are destroyed
-				if ((status.getEnemiesDestroyed() + status.getTotalAsteroidsDestroyed() + status.getReapersDestroyed())%5 == 0){
-					status.setLevel(status.getLevel() + 1);
-				}
-
-				// "remove" asteroid
-				shipExplosion = new Rectangle(
-						enemyShip.x,
-						enemyShip.y,
-						enemyShip.width,
-						enemyShip.height);
-				enemyShip.setLocation(-enemyShip.width, -enemyShip.height);
-				status.setNewEnemyShip(true);
-				lastEnemyTime = System.currentTimeMillis();
-
-				// "remove" ship
-				shipExplosion = new Rectangle(
-						ship.x,
-						ship.y,
-						ship.width,
-						ship.height);
-				ship.setLocation(this.getWidth() + ship.width, -ship.height);
-				status.setNewShip(true);
-				lastShipTime = System.currentTimeMillis();
-
-				// play ship explosion sound
-				soundMan.playShipExplosionSound();
-				// play enemy explosion sound
-				soundMan.playShipExplosionSound();
-			}
-		}
-
-		// check ship-reaper collisions
-		if (status.getLevel()>3){
-			if(reaperShip.intersects(ship)){
-				reaperHP --;
-				// decrease number of ships left
-				if(reaperHP == 0){
+			try{
+				if(enemyShip.intersects(ship)){
+					// decrease number of ships left
 					status.setShipsLeft(status.getShipsLeft() - 1);
+
 					status.setEnemiesDestroyed(status.getEnemiesDestroyed() + 1);
-					status.setScore(status.getScore() + 350);
+					status.setScore(status.getScore() + 50);
 
 					//increase level if 5 asteroids are destroyed
 					if ((status.getEnemiesDestroyed() + status.getTotalAsteroidsDestroyed() + status.getReapersDestroyed())%5 == 0){
 						status.setLevel(status.getLevel() + 1);
 					}
 
-					// "remove" reaper ship
+					// "remove" asteroid
 					shipExplosion = new Rectangle(
-							reaperShip.x,
-							reaperShip.y,
-							reaperShip.width,
-							reaperShip.height);
-					reaperShip.setLocation(-reaperShip.width, -reaperShip.height);
-					status.setNewReaperShip(true);
-					lastReaperTime = System.currentTimeMillis();
+							enemyShip.x,
+							enemyShip.y,
+							enemyShip.width,
+							enemyShip.height);
+					enemyShip.setLocation(-enemyShip.width, -enemyShip.height);
+					status.setNewEnemyShip(true);
+					lastEnemyTime = System.currentTimeMillis();
 
 					// "remove" ship
 					shipExplosion = new Rectangle(
@@ -737,6 +716,55 @@ public class GameScreen extends JPanel {
 					// play enemy explosion sound
 					soundMan.playShipExplosionSound();
 				}
+			}catch (Exception e){
+				//Do nothing
+			}
+		}
+
+		// check ship-reaper collisions
+		if (status.getLevel()>3){
+			try {
+				if(reaperShip.intersects(ship)){
+					reaperHP --;
+					// decrease number of ships left
+					if(reaperHP == 0){
+						status.setShipsLeft(status.getShipsLeft() - 1);
+						status.setEnemiesDestroyed(status.getEnemiesDestroyed() + 1);
+						status.setScore(status.getScore() + 350);
+
+						//increase level if 5 asteroids are destroyed
+						if ((status.getEnemiesDestroyed() + status.getTotalAsteroidsDestroyed() + status.getReapersDestroyed())%5 == 0){
+							status.setLevel(status.getLevel() + 1);
+						}
+
+						// "remove" reaper ship
+						shipExplosion = new Rectangle(
+								reaperShip.x,
+								reaperShip.y,
+								reaperShip.width,
+								reaperShip.height);
+						reaperShip.setLocation(-reaperShip.width, -reaperShip.height);
+						status.setNewReaperShip(true);
+						lastReaperTime = System.currentTimeMillis();
+
+						// "remove" ship
+						shipExplosion = new Rectangle(
+								ship.x,
+								ship.y,
+								ship.width,
+								ship.height);
+						ship.setLocation(this.getWidth() + ship.width, -ship.height);
+						status.setNewShip(true);
+						lastShipTime = System.currentTimeMillis();
+
+						// play ship explosion sound
+						soundMan.playShipExplosionSound();
+						// play enemy explosion sound
+						soundMan.playShipExplosionSound();
+					}
+				}
+			} catch (Exception e){
+				//Do nothing
 			}
 		}
 
@@ -787,7 +815,7 @@ public class GameScreen extends JPanel {
 	 * Draws the initial "Get Ready!" message.
 	 */
 	private void drawGetReady() {
-		String readyStr = "Let's go NIGGA!!!!!!";
+		String readyStr = "Get Ready";
 		g2d.setFont(originalFont.deriveFont(originalFont.getSize2D() + 1));
 		FontMetrics fm = g2d.getFontMetrics();
 		int ascent = fm.getAscent();
@@ -869,6 +897,7 @@ public class GameScreen extends JPanel {
 
 		bigFont = originalFont;
 		biggestFont = null;
+
 
 		// set labels' text
 		shipsValueLabel.setForeground(Color.BLACK);

@@ -15,6 +15,8 @@ public class SoundManager {
 			"/rbadia/voidspace/sounds/shipExplosion.wav"));
 	private AudioClip bulletSound = Applet.newAudioClip(GameScreen.class.getResource(
 			"/rbadia/voidspace/sounds/laser.wav"));
+	private AudioClip gameMusic = Applet.newAudioClip(GameScreen.class.getResource(
+			"/rbadia/voidspace/sounds/MassEffect.wav"));
 
 	/**
 	 * Plays sound for bullets fired by the ship.
@@ -41,6 +43,19 @@ public class SoundManager {
 			}).start();
 		}
 	}
+	
+	/**
+	 * Plays sound for the game's music.
+	 */
+	public void playGameMusic(){
+		if(SOUND_ON){
+			new Thread(new Runnable(){
+				public void run() {
+					gameMusic.loop();
+				}
+			}).start();
+		}
+	}
 
 	/**
 	 * Plays sound for asteroid explosions.
@@ -53,7 +68,7 @@ public class SoundManager {
 	}
 
 	public void playAsteroid1ExplosionSound() {
-		// play sound for asteroid explosions
+		// play sound for second asteroid explosions
 		if(SOUND_ON){
 
 		}

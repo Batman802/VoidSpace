@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
+
 /**
  * The game's main frame. Contains all the game's labels, file menu, and game screen.
  */
@@ -56,6 +57,7 @@ public class MainFrame extends JFrame {
 		this.setContentPane(getJContentPane());
 		this.setTitle("Void Space");
 //		this.setResizable(false);
+
 		
 		Dimension dim = this.getToolkit().getScreenSize();
 		Rectangle bounds = this.getBounds();
