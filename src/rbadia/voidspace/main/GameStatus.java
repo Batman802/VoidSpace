@@ -17,7 +17,6 @@ public class GameStatus {
 	private boolean newAsteroid1;
 	private long asteroidsDestroyed = 0;
 	private long asteroids1Destroyed = 0;
-	private long totalAsteroidsDestroyed = 0;
 	private int enemiesDestroyed = 0;
 	private int reapersDestroyed = 0;
 	private int shipsLeft;
@@ -142,10 +141,6 @@ public class GameStatus {
 	
 	public synchronized long getTotalAsteroidsDestroyed() {
 		return asteroidsDestroyed + asteroids1Destroyed;
-	}
-
-	public synchronized void setTotalAsteroidsDestroyed(long totalAsteroidsDestroyed) {
-		this.totalAsteroidsDestroyed = totalAsteroidsDestroyed;
 	}
 
 	/**

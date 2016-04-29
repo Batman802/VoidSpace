@@ -37,11 +37,11 @@ public class GameLoop implements Runnable{
 			// check game or level ending conditions
 			gameLogic.checkConditions();
 			
-			// update the game graphics
-			gameScreen.updateScreen();
-			
 			// handle input
 			inputHandler.handleInput(gameScreen);
+						
+			// update the game graphics
+			gameScreen.updateScreen();
 			
 			// repaint the graphics unto screen
 			gameScreen.repaint();

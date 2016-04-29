@@ -48,7 +48,7 @@ public class GameLogic {
 		// init some variables
 		bullets = new ArrayList<Bullet>();
 		enemyBullets = new ArrayList<Bullet>();
-		reaperBullets = new ArrayList<Bullet>(5);
+		reaperBullets = new ArrayList<Bullet>();
 	}
 
 	/**
@@ -75,13 +75,12 @@ public class GameLogic {
 		
 		// init game variables
 		bullets = new ArrayList<Bullet>();
-		soundMan.playGameMusic();
+		//soundMan.playGameMusic();
 
 		status.setShipsLeft(3);
 		status.setGameOver(false);
 		status.setAsteroidsDestroyed(0);
 		status.setAsteroids1Destroyed(0);
-		status.setTotalAsteroidsDestroyed(0);
 		status.setEnemiesDestroyed(0);
 		status.setReapersDestroyed(0);
 		status.setNewAsteroid(false);

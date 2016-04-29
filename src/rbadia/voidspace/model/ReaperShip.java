@@ -27,7 +27,7 @@ private static final long serialVersionUID = 1L;
 		this.setSize(reaperShipWidth, reaperShipHeight);
 	}
 	/**
-	 * Get the default ship width
+	 * Get the default ship width 
 	 * @return the default ship width
 	 */
 	public int getReaperWidth() {

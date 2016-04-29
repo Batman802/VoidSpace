@@ -35,7 +35,7 @@ public class Bullet extends Rectangle {
 
 	public Bullet(ReaperShip reaperShip) {
 		speed = 4;
-		this.setLocation(reaperShip.x + reaperShip.width/2 - bulletWidth/2,
+		this.setLocation(reaperShip.x + reaperShip.getReaperWidth()/2 - bulletWidth/2,
 				reaperShip.y - bulletHeight + reaperShip.height);
 		this.setSize(bulletWidth, bulletHeight);
 	}

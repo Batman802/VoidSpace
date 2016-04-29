@@ -1,5 +1,6 @@
 package rbadia.voidspace.main;
 
+
 import javax.swing.JFrame;
 
 /**

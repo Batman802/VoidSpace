@@ -1,4 +1,5 @@
 package rbadia.voidspace.main;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -178,6 +179,7 @@ public class MainFrame extends JFrame {
 			jContentPane.add(enemiesValueLabel, gridBagConstraints10);
 			jContentPane.add(reapersLabel, gridBagConstraints11);
 			jContentPane.add(reapersValueLabel, gridBagConstraints12);
+			jContentPane.setBackground(Color.GRAY);
 		}
 		return jContentPane;
 	}

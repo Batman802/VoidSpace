@@ -20,6 +20,8 @@ import rbadia.voidspace.model.Ship;
  */
 public class GraphicsManager {
 	private BufferedImage shipImg;
+	private BufferedImage shipLeftImg;
+	private BufferedImage shipRightImg;
 	private BufferedImage bulletImg;
 	private BufferedImage asteroidImg;
 	private BufferedImage asteroid1Img;
@@ -29,6 +31,7 @@ public class GraphicsManager {
 	private BufferedImage enemyShipImg;
 	private BufferedImage reaperShipImg;
 	private BufferedImage reaperExplosionImg;
+	
 	
 	/**
 	 * Creates a new graphics manager and loads the game images.
@@ -40,6 +43,8 @@ public class GraphicsManager {
 			this.reaperShipImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/Reaper.png"));
 			this.enemyShipImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/enemyShip.png"));
 			this.shipImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/ship.png"));
+			this.shipLeftImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/shipLeft.png"));
+			this.shipRightImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/shipRight.png"));
 			this.asteroidImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/asteroid.png"));
 			this.asteroid1Img = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/asteroid1.png"));
 			this.asteroidExplosionImg = ImageIO.read(getClass().getResource("/rbadia/voidspace/graphics/asteroidExplosion.png"));
@@ -61,7 +66,28 @@ public class GraphicsManager {
 	 * @param observer object to be notified
 	 */
 	public void drawShip(Ship ship, Graphics2D g2d, ImageObserver observer) {
-		g2d.drawImage(shipImg, ship.x, ship.y, observer);
+			g2d.drawImage(shipImg, ship.x, ship.y, observer);
+				
+	}
+	
+	/**
+	 * Draws a ship turning right image to the specified graphics canvas.
+	 * @param ship the ship to draw
+	 * @param g2d the graphics canvas
+	 * @param observer object to be notified
+	 */
+	public void drawShipRight(Ship ship, Graphics2D g2d, ImageObserver observer) {
+		g2d.drawImage(shipRightImg, ship.x, ship.y, observer);
+	}
+	
+	/**
+	 * Draws a ship turning left  image to the specified graphics canvas.
+	 * @param ship the ship to draw
+	 * @param g2d the graphics canvas
+	 * @param observer object to be notified
+	 */
+	public void drawShipLeft(Ship ship, Graphics2D g2d, ImageObserver observer) {
+		g2d.drawImage(shipLeftImg, ship.x, ship.y, observer);
 	}
 
 	/**
@@ -151,8 +177,8 @@ public class GraphicsManager {
 	}
 	
 	/**
-	 * Draws an asteroid explosion image to the specified graphics canvas.
-	 * @param asteroidExplosion the bounding rectangle of the explosion
+	 * Draws a reaper explosion image to the specified graphics canvas.
+	 * @param reaperExplosion the bounding rectangle of the explosion
 	 * @param g2d the graphics canvas
 	 * @param observer object to be notified
 	 */

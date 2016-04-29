@@ -15,6 +15,8 @@ public class InputHandler implements KeyListener{
 	private boolean upIsPressed;
 	private boolean spaceIsPressed;
 	private boolean shiftIsPressed;
+	public boolean movingRight;
+	public boolean movingLeft;
 	
 	private long lastBulletTime;
 	
@@ -28,6 +30,7 @@ public class InputHandler implements KeyListener{
 		this.gameLogic = gameLogic;
 	}
 	
+
 	/**
 	 * Handle user input after screen update.
 	 * @param gameScreen he game screen
@@ -122,9 +125,11 @@ public class InputHandler implements KeyListener{
 			break;
 		case KeyEvent.VK_LEFT:
 			this.leftIsPressed = true;
+			this.movingLeft = true;
 			break;
 		case KeyEvent.VK_RIGHT:
 			this.rightIsPressed = true;
+			this.movingRight = true;
 			break;
 		case KeyEvent.VK_SPACE:
 			GameStatus status = gameLogic.getStatus();
@@ -136,11 +141,14 @@ public class InputHandler implements KeyListener{
 				downIsPressed = false;
 				upIsPressed = false;
 				spaceIsPressed = false;
+				movingRight = false;
+				movingLeft = false;
 				
 				gameLogic.newGame();
 			}
 			else{
 				this.spaceIsPressed = true;
+
 			}
 			break;
 		case KeyEvent.VK_SHIFT:
@@ -166,9 +174,11 @@ public class InputHandler implements KeyListener{
 			break;
 		case KeyEvent.VK_LEFT:
 			this.leftIsPressed = false;
+			this.movingLeft = false;
 			break;
 		case KeyEvent.VK_RIGHT:
 			this.rightIsPressed = false;
+			this.movingRight = false;
 			break;
 		case KeyEvent.VK_SPACE:
 			this.spaceIsPressed = false;
@@ -184,5 +194,19 @@ public class InputHandler implements KeyListener{
 
 	public void keyTyped(KeyEvent e) {
 		// not used
+	}
+	
+	public boolean isMovingRight (){
+		if (this.movingRight==true){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isMovingLeft (){
+		if (this.movingLeft==true){
+			return true;
+		}
+		return false;
 	}
 }
